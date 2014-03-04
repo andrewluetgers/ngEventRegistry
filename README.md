@@ -49,9 +49,9 @@ http://stackoverflow.com/questions/1679145/interface-and-protocol-explanation
 ### So lets be explicit about our protocol and enforce it programatically.
 
 ngEventRegistry produces injectable services, two for each event. One
-service to broadcast the event another to listen for and handle the event.
-These event-specific emitter and handler functions enforce a pre-defined
-protocol. Argument constructor functions (argSpecs) guarantee any
+service to broadcast the event another to register a handler for the event.
+These event-specific publisher and subscriber functions enforce a pre-defined
+protocol. Optional argument validator functions (argSpecs) guarantee any
 required argument values are provided correctly. This approach also provides
 a single touch-point for defining, documenting  and refactoring this protocol.
 
@@ -69,8 +69,8 @@ Below you can see the Angular Batarang dependency view. It shows what services
 are injected into other services. Now that our events are also services we can
 easily see what services broadcast a specific event and which ones respond to
 that event. One limitation of this view is that it does not show the same for
-controllers (left). This seems to be an important omission when trying to visualize
-communication between services and controllers. BUT there is a simple solution
+controllers (left). This is an important omission when trying to visualize
+communication between services and controllers, BUT there is a simple solution
 to this problem (right). Take a look at the controllersAsServices.html example
 to see how it's done.
 
@@ -107,42 +107,52 @@ i argument provided to the argSpec function to determine what argument is being
 provided. This function should throw an error if the provided value is unexpected.
 
 
-### usage
-see examples folder for more
+### Usage
+from examples/controllersAsServices.html
 
  ```javascript
 // this is completely contrived to demonstrate functionality not a real use case, sorry.
 
 angular.module("myApp", ["ngEventRegistry", "myModule"])
-	.controller("myAppCtrl", function(onLoading, onMyNumberEvent, myNumberService) {
 
-		onLoading(function() {
-			console.log("loading event fired here are the args", arguments);
-		});
-
-		// here we can handle the numberEvent
-		onMyNumberEvent(function(num) {
-			console.log("Should be a number -> " + num);
-		});
-
-		myNumberService(55);
-		myNumberService("foo");
-
+	// to get Angular Batarang to graph the dependencies of a controller
+	// we need to first define it as service then inject it into the controller
+	.factory("myAppCtrlFn", function(onLoading, onMyNumberEvent, myNumberService) {
+		return function myAppCtrlFn() {
+			onLoading(function() {
+				console.log("loading event fired here are the args", arguments);
+			});
+	
+			// here we can handle the numberEvent
+			onMyNumberEvent(function(num) {
+				console.log("Should be a number -> " + num);
+			});
+	
+			myNumberService(55);
+			myNumberService("foo");
+		};
+	})
+		
+	// here we just inject and call the controller function
+	// now we can visualize events happening between controllers and services
+	.controller("myAppCtrl", function(myAppCtrlFn) {
+		myAppCtrlFn();
 	});
+
 
 angular.module("myModule", [])
 	.config(function(registerEvents) {
 		// register events related to this module here in the config
-
+	
 		// if you only provide names, validation will be pass-through
 		registerEvents("loading", "anotherEvent");
-
+	
 		// register multiple events with validation
 		registerEvents({
 			myNumberEvent:  expectsNumber, // this can be an array of functions, one for each arg passed in
 			anotherEvent:   registerEvents.passThrough
 		});
-
+	
 		// the event handler is provided the values returned by the validation functions
 		// how you deal with invalid inputs is up to you
 		// if input is bad you could fix it and return the right thing
@@ -161,7 +171,8 @@ angular.module("myModule", [])
 			setTimeout(function() {
 				myNumberEvent(num);
 			}, 1000);
-
+	
 			loading("loading", "foo", "bar", num);
 		};
 	});
+```
