@@ -12,6 +12,7 @@ Events as services. Inject an emitter here, a subscriber there. Event wrangling 
 - somewhere else handle the event with `onFoo(myHandlerFn)`
 - validate event arguments like so 
 
+sfsdf
 
 	registerEvents("validEvent", funciton(arg) {
 		// validate arg here, throw error if invalid
