@@ -1,7 +1,7 @@
 ngEventRegistry
 ===============
 
-Events as services. Inject an emitter here, a subscriber there. Event wrangling achievement unlocked!
+Events as services. Inject an emitter here, a subscriber there, validate input. Event wrangling achievement unlocked!
 
 # TLDR;
 
@@ -10,9 +10,8 @@ Events as services. Inject an emitter here, a subscriber there. Event wrangling 
 - in a config function, inject registerEvents service and call `registerEvents("foo");`
 - to broadcast foo event from service or controller inject foo and call it as your broadcast method `foo(bar);`
 - somewhere else handle the event with `onFoo(myHandlerFn)`
-- validate event arguments like so 
 
-sfsdf
+And you can validate event arguments like so:
 
 	registerEvents("validEvent", funciton(arg) {
 		// validate arg here, throw error if invalid
