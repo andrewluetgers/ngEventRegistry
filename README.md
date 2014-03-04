@@ -67,8 +67,8 @@ of events and simplifies thinking about their behavior.
 
 This approach also provides the ability to register an event along with
 a an "argSpec" function or set of functions that enforce what values can
-be broadcast. This validation is pass-through by default but can used to ensure
-program correctness as needed.
+be broadcast. This validation is pass-through by default but can be used 
+to ensure program correctness as needed.
 
 an arg spec looks like this.
 
@@ -84,8 +84,8 @@ be passed to the event listeners.
 an argSpec is a function that validates its input and returns a valid arg
 that will be provided to the event handler. Arrays of argSpec functions are
 supported if different functions are needed per arg, otherwise you can use the
-i arg provided to the argSpec function to determine what argument is being
-provided this function should throw an error if the provided value is unexpected
+i argument provided to the argSpec function to determine what argument is being
+provided. This function should throw an error if the provided value is unexpected.
 
 
 ### usage: register app events
