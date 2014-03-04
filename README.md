@@ -20,7 +20,7 @@ And you can validate event arguments like so:
 
 # One Thing, Leads to Another
 
-[![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/oneThing.jpg)](http://youtu.be/UMMnJm1PYOE)
+[![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/img/oneThing.jpg)](http://youtu.be/UMMnJm1PYOE)
 
 Events are great right? Loose coupling and all. But if you begin to lean
 heavily on events one thing will surely lead to another and another,
