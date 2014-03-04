@@ -94,6 +94,7 @@ provided. This function should throw an error if the provided value is unexpecte
 ### usage
 see examples folder for more
 
+ ```javascript
 	// this is completely contrived to demonstrate functionality not a real use case, sorry.
 
 	angular.module("myApp", ["ngEventRegistry", "myModule"])
@@ -112,7 +113,6 @@ see examples folder for more
 			myNumberService("foo");
 
 		});
-
 
 	angular.module("myModule", [])
 		.config(function(registerEvents) {
