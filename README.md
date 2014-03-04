@@ -139,7 +139,7 @@ angular.module("myModule", [])
 
 		// register multiple events with validation
 		registerEvents({
-			myNumberEvent:  numberOrNull, // this can be an array of functions, one for each arg passed in
+			myNumberEvent:  expectsNumber, // this can be an array of functions, one for each arg passed in
 			anotherEvent:   registerEvents.passThrough
 		});
 
@@ -148,7 +148,7 @@ angular.module("myModule", [])
 		// if input is bad you could fix it and return the right thing
 		// but ideally values are expected to be valid and you should throw an
 		// error and fix issues in the code as they arise.
-		function numberOrNull(arg, i) {
+		function expectsNumber(arg, i) {
 			if (isNaN(arg)) {
 				throw new TypeError("Expected number but saw " + arg);
 			}
