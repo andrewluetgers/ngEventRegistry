@@ -75,7 +75,6 @@ to this problem (right). Take a look at the controllersAsServices.html example
 to see how it's done.
 
 ![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/img/batarang.jpg)
-see examples folder for more
 
 ### How it works
 
