@@ -47,15 +47,15 @@ a single touch-point for defining, documenting  and refactoring this protocol.
 
 See usage at bottom of file.
 
-Events as services eliminates hard-coded strings, typos and refactoring
-becomes easier. The real benefit of this approach is that it is much more
-self documenting and tools like angular batarang can now graph the relationships
-of events with other services. Although better tooling is needed this is one
-step toward the visualization of application communication.
+Events as services eliminates hard-coded strings, typos are less of a problem 
+and refactoring becomes easier. The real benefit of this approach is that it is 
+much more self documenting and tools like Angular Batarang can now graph the 
+relationships of events with other services. Although better tooling is still 
+needed this is one step toward the visualization of application communication.
 
-While angular provides both emit and broadcast methods this approach only
+While angular provides emit and broadcast methods this approach only
 broadcasts events down from the rootScope. This ensures universal visibility
-of events and eases reasoning about their behavior.
+of events and simplifies thinking about their behavior.
 
 This approach also provides the ability to register an event along with
 a an "argSpec" function or set of functions that enforce what values can
