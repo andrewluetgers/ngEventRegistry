@@ -63,6 +63,8 @@ much more self documenting and tools like Angular Batarang can now graph the
 relationships of events with other services. Although better tooling is still
 needed this is one step toward the visualization of application communication.
 
+### Visualizing application communication
+
 Below you can see the Angular Batarang dependency view. It shows what services
 are injected into other services. Now that our events are also services we can
 easily see what services broadcast a specific event and which ones respond to
@@ -74,6 +76,8 @@ to see how it's done.
 
 ![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/img/batarang.jpg)
 see examples folder for more
+
+### How it works
 
 While angular provides emit and broadcast methods this approach only
 broadcasts events down from the rootScope. This ensures universal visibility
