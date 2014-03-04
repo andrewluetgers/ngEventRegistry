@@ -46,7 +46,7 @@ http://stackoverflow.com/questions/1679145/interface-and-protocol-explanation
 
 ### So lets be explicit about our protocol and enforce it programatically.
 
-ngEventRegistry produces injectable services two for each event. One
+ngEventRegistry produces injectable services, two for each event. One
 service to broadcast the event another to listen for and handle the event.
 These event-specific emitter and handler functions enforce a pre-defined
 protocol. Argument constructor functions (argSpecs) guarantee any
