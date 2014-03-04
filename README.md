@@ -13,10 +13,11 @@ Events as services. Inject an emitter here, a subscriber there, validate input. 
 
 And you can validate event arguments like so:
 
-	registerEvents("validEvent", funciton(arg) {
-		// validate arg here, throw error if invalid
-		return arg;
-	});
+ ```javascript
+registerEvents("validEvent", funciton(arg) {
+	// validate arg here, throw error if invalid
+	return arg;
+});
 
 # One Thing, Leads to Another
 
@@ -95,57 +96,57 @@ provided. This function should throw an error if the provided value is unexpecte
 see examples folder for more
 
  ```javascript
-	// this is completely contrived to demonstrate functionality not a real use case, sorry.
+// this is completely contrived to demonstrate functionality not a real use case, sorry.
 
-	angular.module("myApp", ["ngEventRegistry", "myModule"])
-		.controller("myAppCtrl", function(onLoading, onMyNumberEvent, myNumberService) {
+angular.module("myApp", ["ngEventRegistry", "myModule"])
+	.controller("myAppCtrl", function(onLoading, onMyNumberEvent, myNumberService) {
 
-			onLoading(function() {
-				console.log("loading event fired here are the args", arguments);
-			});
-
-			// here we can handle the numberEvent
-			onMyNumberEvent(function(num) {
-				console.log("Should be a number -> " + num);
-			});
-
-			myNumberService(55);
-			myNumberService("foo");
-
+		onLoading(function() {
+			console.log("loading event fired here are the args", arguments);
 		});
 
-	angular.module("myModule", [])
-		.config(function(registerEvents) {
-			// register events related to this module here in the config
+		// here we can handle the numberEvent
+		onMyNumberEvent(function(num) {
+			console.log("Should be a number -> " + num);
+		});
 
-			// if you only provide names, validation will be pass-through
-			registerEvents("loading", "anotherEvent");
+		myNumberService(55);
+		myNumberService("foo");
 
-			// register multiple events with validation
-			registerEvents({
-				myNumberEvent:  numberOrNull, // this can be an array of functions, one for each arg passed in
-				anotherEvent:   registerEvents.passThrough
-			});
+	});
 
-			// the event handler is provided the values returned by the validation functions
-			// how you deal with invalid inputs is up to you
-			// if input is bad you could fix it and return the right thing
-			// but ideally values are expected to be valid and you should throw an
-			// error and fix issues in the code as they arise.
-			function numberOrNull(arg, i) {
-				if (isNaN(arg)) {
-					throw new TypeError("Expected number but saw " + arg);
-				}
-				return arg;
+angular.module("myModule", [])
+	.config(function(registerEvents) {
+		// register events related to this module here in the config
+
+		// if you only provide names, validation will be pass-through
+		registerEvents("loading", "anotherEvent");
+
+		// register multiple events with validation
+		registerEvents({
+			myNumberEvent:  numberOrNull, // this can be an array of functions, one for each arg passed in
+			anotherEvent:   registerEvents.passThrough
+		});
+
+		// the event handler is provided the values returned by the validation functions
+		// how you deal with invalid inputs is up to you
+		// if input is bad you could fix it and return the right thing
+		// but ideally values are expected to be valid and you should throw an
+		// error and fix issues in the code as they arise.
+		function numberOrNull(arg, i) {
+			if (isNaN(arg)) {
+				throw new TypeError("Expected number but saw " + arg);
 			}
-		})
-		.factory("myNumberService", function(myNumberEvent, loading) {
-			return function(num) {
-				// now we can emit our number event
-				setTimeout(function() {
-					myNumberEvent(num);
-				}, 1000);
+			return arg;
+		}
+	})
+	.factory("myNumberService", function(myNumberEvent, loading) {
+		return function(num) {
+			// now we can emit our number event
+			setTimeout(function() {
+				myNumberEvent(num);
+			}, 1000);
 
-				loading("loading", "foo", "bar", num);
-			};
-		});
+			loading("loading", "foo", "bar", num);
+		};
+	});
