@@ -49,9 +49,9 @@ http://stackoverflow.com/questions/1679145/interface-and-protocol-explanation
 ### So lets be explicit about our protocol and enforce it programatically.
 
 ngEventRegistry produces injectable services, two for each event. One
-service to broadcast the event another to listen for and handle the event.
-These event-specific emitter and handler functions enforce a pre-defined
-protocol. Argument constructor functions (argSpecs) guarantee any
+service to broadcast the event another to register a handler for the event.
+These event-specific publisher and subscriber functions enforce a pre-defined
+protocol. Optional argument validator functions (argSpecs) guarantee any
 required argument values are provided correctly. This approach also provides
 a single touch-point for defining, documenting  and refactoring this protocol.
 
@@ -69,8 +69,8 @@ Below you can see the Angular Batarang dependency view. It shows what services
 are injected into other services. Now that our events are also services we can
 easily see what services broadcast a specific event and which ones respond to
 that event. One limitation of this view is that it does not show the same for
-controllers (left). This seems to be an important omission when trying to visualize
-communication between services and controllers. BUT there is a simple solution
+controllers (left). This is an important omission when trying to visualize
+communication between services and controllers, BUT there is a simple solution
 to this problem (right). Take a look at the controllersAsServices.html example
 to see how it's done.
 
