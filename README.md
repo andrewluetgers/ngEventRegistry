@@ -53,7 +53,7 @@ service to broadcast the event another to register a handler for the event.
 These event-specific publisher and subscriber functions enforce a pre-defined
 protocol. Optional argument validator functions (argSpecs) guarantee any
 required argument values are provided correctly. This approach also provides
-a single touch-point for defining, documenting  and refactoring this protocol.
+a single touch-point for defining, documenting and refactoring this protocol.
 
 See usage at bottom of file.
 
