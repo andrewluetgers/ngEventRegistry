@@ -5,14 +5,21 @@ Events as services. Inject an emitter here, a subscriber there. Event wrangling 
 
 # TLDR;
 
-- add to your angular app
-- requires lodash or underscore
-- require the ngEventRegistry module
-- in a config function inject registerEvents servicem and call registerEvents("foo");
-- to broadcast foo event from service or controller inject foo and do foo(bar baz)
-- somewhere else handle the event with onFoo(myHandlerFn)
+- add ngEventRegistry.js to your angular app (requires lodash or underscore)
+- add "ngEventRegistry" as a dependency of your app
+- in a config function, inject registerEvents service and call `registerEvents("foo");`
 
-# The problem: One Thing, Leads to Another
+- to broadcast foo event from service or controller inject foo and call it as your broadcast method `foo(bar);`
+
+- somewhere else handle the event with `onFoo(myHandlerFn)`
+- validate event arguments like so 
+
+	registerEvents("validEvent", funciton(arg) {
+		// validate arg here, throw error if invalid
+		return arg;
+	});
+
+# One Thing, Leads to Another
 
 [![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/oneThing.jpg)](http://youtu.be/UMMnJm1PYOE)
 
@@ -37,6 +44,8 @@ unmanageable as complexity compounds quickly when one thing leads to another.
 [1] = The concept can be described as "protocol" or "interface" depending on
 the language you're thinking of. I'll stick with protocol. See link below:
 http://stackoverflow.com/questions/1679145/interface-and-protocol-explanation
+
+### So lets be explicit about our protocol and enforce it programatically.
 
 ngEventRegistry produces injectable services two for each event. One
 service to broadcast the event another to listen for and handle the event.
