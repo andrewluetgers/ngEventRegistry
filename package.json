@@ -4,7 +4,7 @@
 	"author": "Andrew Luetgers",
 	"license": "MIT",
 	"version": "0.1.2",
-	"description": "Events as services. Inject an broadcaster here, a handler there. Event wrangling achievement unlocked!",
+	"description": "Events as services. Inject an broadcaster here, a handler there, validate input. Event wrangling achievement unlocked!",
 	"repository": "git@github.com:andrewluetgers/ngEventRegistry.git",
 	"main": "ngEventRegistry.js"
 }
