@@ -1,18 +1,24 @@
 ngEventRegistry
 ===============
 
-Events as services. Inject an emitter here, a subscriber there. Event wrangling achievement unlocked!
+Events as services. Inject an emitter here, a subscriber there, validate input. Event wrangling achievement unlocked!
 
 # TLDR;
 
-- add to your angular app
-- requires lodash or underscore
-- require the ngEventRegistry module
-- in a config function inject registerEvents servicem and call registerEvents("foo");
-- to broadcast foo event from service or controller inject foo and do foo(bar baz)
-- somewhere else handle the event with onFoo(myHandlerFn)
+- add ngEventRegistry.js to your angular app (requires lodash or underscore)
+- add "ngEventRegistry" as a dependency of your app
+- in a config function, inject registerEvents service and call `registerEvents("foo");`
+- to broadcast foo event from service or controller inject foo and call it as your broadcast method `foo(bar);`
+- somewhere else handle the event with `onFoo(myHandlerFn)`
 
-# The problem: One Thing, Leads to Another
+And you can validate event arguments like so:
+
+	registerEvents("validEvent", funciton(arg) {
+		// validate arg here, throw error if invalid
+		return arg;
+	});
+
+# One Thing, Leads to Another
 
 [![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/oneThing.jpg)](http://youtu.be/UMMnJm1PYOE)
 
@@ -21,7 +27,7 @@ heavily on events one thing will surely lead to another and another,
 perhaps forever. An event gets emitted somewhere (who knows from where)
 gets handled somewhere else (again who knows where that may be)
 and guess what, within that handler something else happens. Yup you
-guessed it whatever that was it lead to another event. This is all fine
+guessed it. Whatever that was, it lead to another event. This is all fine
 and good, until it isn't and before you know it you find you're trapped
 in a [House of the Devil](http://www.imdb.com/title/tt1172994/) soon to be
 part of a satanic ritual that will leave you mentally scarred for life.
@@ -38,7 +44,9 @@ unmanageable as complexity compounds quickly when one thing leads to another.
 the language you're thinking of. I'll stick with protocol. See link below:
 http://stackoverflow.com/questions/1679145/interface-and-protocol-explanation
 
-ngEventRegistry produces injectable services two for each event. One
+### So lets be explicit about our protocol and enforce it programatically.
+
+ngEventRegistry produces injectable services, two for each event. One
 service to broadcast the event another to listen for and handle the event.
 These event-specific emitter and handler functions enforce a pre-defined
 protocol. Argument constructor functions (argSpecs) guarantee any
@@ -47,20 +55,23 @@ a single touch-point for defining, documenting  and refactoring this protocol.
 
 See usage at bottom of file.
 
-Events as services eliminates hard-coded strings, typos and refactoring
-becomes easier. The real benefit of this approach is that it is much more
-self documenting and tools like angular batarang can now graph the relationships
-of events with other services. Although better tooling is needed this is one
-step toward the visualization of application communication.
+Events as services eliminates hard-coded strings, typos are less of a problem
+and refactoring becomes easier. The real benefit of this approach is that it is
+much more self documenting and tools like Angular Batarang can now graph the
+relationships of events with other services. Although better tooling is still
+needed this is one step toward the visualization of application communication.
 
-While angular provides both emit and broadcast methods this approach only
+![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/img/batarang.jpg)
+see examples folder for more
+
+While angular provides emit and broadcast methods this approach only
 broadcasts events down from the rootScope. This ensures universal visibility
-of events and eases reasoning about their behavior.
+of events and simplifies thinking about their behavior.
 
 This approach also provides the ability to register an event along with
 a an "argSpec" function or set of functions that enforce what values can
-be broadcast. This validation is pass-through by default but can used to ensure
-program correctness as needed.
+be broadcast. This validation is pass-through by default but can be used
+to ensure program correctness as needed.
 
 an arg spec looks like this.
 
@@ -76,29 +87,65 @@ be passed to the event listeners.
 an argSpec is a function that validates its input and returns a valid arg
 that will be provided to the event handler. Arrays of argSpec functions are
 supported if different functions are needed per arg, otherwise you can use the
-i arg provided to the argSpec function to determine what argument is being
-provided this function should throw an error if the provided value is unexpected
+i argument provided to the argSpec function to determine what argument is being
+provided. This function should throw an error if the provided value is unexpected.
 
 
-### usage: register app events
+### usage
+see examples folder for more
 
-	angular.module("myModule", ["eventRegistry"])
+	// this is completely contrived to demonstrate functionality not a real use case, sorry.
 
-		.config(function(registerEvents) {
+	angular.module("myApp", ["ngEventRegistry", "myModule"])
+		.controller("myAppCtrl", function(onLoading, onMyNumberEvent, myNumberService) {
 
-			function numberOrNull(arg, i) {
-				return typeof arg == "number" ? arg : null
-			}
-
-			// define all app events here
-			registerEvents({
-				myNumberEvent:	numberOrNull, // this can be an array of functions, one for each arg passed in
-				anotherEvent:	registerEvents.passThrough
+			onLoading(function() {
+				console.log("loading event fired here are the args", arguments);
 			});
 
-			// if you only provide names as arguments validation will be pass-through
-			registerEvents("testEvent", "anotherEvent");
+			// here we can handle the numberEvent
+			onMyNumberEvent(function(num) {
+				console.log("Should be a number -> " + num);
+			});
+
+			myNumberService(55);
+			myNumberService("foo");
+
 		});
 
-	// Its best to declare and broadcast events from the same module
-	// lets imagin
+
+	angular.module("myModule", [])
+		.config(function(registerEvents) {
+			// register events related to this module here in the config
+
+			// if you only provide names, validation will be pass-through
+			registerEvents("loading", "anotherEvent");
+
+			// register multiple events with validation
+			registerEvents({
+				myNumberEvent:  numberOrNull, // this can be an array of functions, one for each arg passed in
+				anotherEvent:   registerEvents.passThrough
+			});
+
+			// the event handler is provided the values returned by the validation functions
+			// how you deal with invalid inputs is up to you
+			// if input is bad you could fix it and return the right thing
+			// but ideally values are expected to be valid and you should throw an
+			// error and fix issues in the code as they arise.
+			function numberOrNull(arg, i) {
+				if (isNaN(arg)) {
+					throw new TypeError("Expected number but saw " + arg);
+				}
+				return arg;
+			}
+		})
+		.factory("myNumberService", function(myNumberEvent, loading) {
+			return function(num) {
+				// now we can emit our number event
+				setTimeout(function() {
+					myNumberEvent(num);
+				}, 1000);
+
+				loading("loading", "foo", "bar", num);
+			};
+		});

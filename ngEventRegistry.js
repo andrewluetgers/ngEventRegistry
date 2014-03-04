@@ -77,8 +77,6 @@ angular.module("ngEventRegistry", [], function($provide) {
 			 * that were provided to the event's broadcast function
 			 * @returns function a de-registration function for this listener.
 			 */
-
-			console.log("building instance of " + onName);
 			function handler(fn) {
 				return $rootScope.$on(name, function() {
 					var args = _.values(arguments);
@@ -119,17 +117,17 @@ angular.module("ngEventRegistry", [], function($provide) {
 	}
 
 	// register all Angular events as passThrough (no validation)
-	registerEvents([
-		"$locationChangeStart",
-		"$locationChangeSuccess",
-		"$routeUpdate",
-		"$routeChangeStart",
-		"$routeChangeSuccess",
-		"$routeChangeError",
-		"$destroy",
-		"$includeContentLoaded",
-		"$viewContentLoaded"
-	]);
+//	registerEvents([
+//		"$locationChangeStart",
+//		"$locationChangeSuccess",
+//		"$routeUpdate",
+//		"$routeChangeStart",
+//		"$routeChangeSuccess",
+//		"$routeChangeError",
+//		"$destroy",
+//		"$includeContentLoaded",
+//		"$viewContentLoaded"
+//	]);
 
 	registerEvents.passThrough = passThrough;
 
