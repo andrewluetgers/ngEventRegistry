@@ -107,42 +107,52 @@ i argument provided to the argSpec function to determine what argument is being
 provided. This function should throw an error if the provided value is unexpected.
 
 
-### usage
-see examples folder for more
+### Usage
+from examples/controllersAsServices.html
 
  ```javascript
 // this is completely contrived to demonstrate functionality not a real use case, sorry.
 
 angular.module("myApp", ["ngEventRegistry", "myModule"])
-	.controller("myAppCtrl", function(onLoading, onMyNumberEvent, myNumberService) {
 
-		onLoading(function() {
-			console.log("loading event fired here are the args", arguments);
-		});
-
-		// here we can handle the numberEvent
-		onMyNumberEvent(function(num) {
-			console.log("Should be a number -> " + num);
-		});
-
-		myNumberService(55);
-		myNumberService("foo");
-
+	// to get Angular Batarang to graph the dependencies of a controller
+	// we need to first define it as service then inject it into the controller
+	.factory("myAppCtrlFn", function(onLoading, onMyNumberEvent, myNumberService) {
+		return function myAppCtrlFn() {
+			onLoading(function() {
+				console.log("loading event fired here are the args", arguments);
+			});
+	
+			// here we can handle the numberEvent
+			onMyNumberEvent(function(num) {
+				console.log("Should be a number -> " + num);
+			});
+	
+			myNumberService(55);
+			myNumberService("foo");
+		};
+	})
+		
+	// here we just inject and call the controller function
+	// now we can visualize events happening between controllers and services
+	.controller("myAppCtrl", function(myAppCtrlFn) {
+		myAppCtrlFn();
 	});
+
 
 angular.module("myModule", [])
 	.config(function(registerEvents) {
 		// register events related to this module here in the config
-
+	
 		// if you only provide names, validation will be pass-through
 		registerEvents("loading", "anotherEvent");
-
+	
 		// register multiple events with validation
 		registerEvents({
 			myNumberEvent:  numberOrNull, // this can be an array of functions, one for each arg passed in
 			anotherEvent:   registerEvents.passThrough
 		});
-
+	
 		// the event handler is provided the values returned by the validation functions
 		// how you deal with invalid inputs is up to you
 		// if input is bad you could fix it and return the right thing
@@ -161,7 +171,8 @@ angular.module("myModule", [])
 			setTimeout(function() {
 				myNumberEvent(num);
 			}, 1000);
-
+	
 			loading("loading", "foo", "bar", num);
 		};
 	});
+```
