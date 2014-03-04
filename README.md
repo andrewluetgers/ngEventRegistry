@@ -63,6 +63,15 @@ much more self documenting and tools like Angular Batarang can now graph the
 relationships of events with other services. Although better tooling is still
 needed this is one step toward the visualization of application communication.
 
+Below you can see the Angular Batarang dependency view. It shows what services
+are injected into other services. Now that our events are also services we can
+easily see what services broadcast a specific event and which ones respond to
+that event. One limitation of this view is that it does not show the same for
+controllers (left). This seems to be an important omission when trying to visualize
+communication between services and controllers. BUT there is a simple solution
+to this problem (right). Take a look at the controllersAsServices.html example
+to see how it's done.
+
 ![ScreenShot](https://raw.github.com/andrewluetgers/ngEventRegistry/master/img/batarang.jpg)
 see examples folder for more
 
