@@ -18,6 +18,7 @@ registerEvents("validEvent", funciton(arg) {
 	// validate arg here, throw error if invalid
 	return arg;
 });
+```
 
 # One Thing, Leads to Another
 
