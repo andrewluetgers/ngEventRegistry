@@ -8,11 +8,10 @@ Events as services. Inject an emitter here, a subscriber there. Event wrangling 
 - add ngEventRegistry.js to your angular app (requires lodash or underscore)
 - add "ngEventRegistry" as a dependency of your app
 - in a config function, inject registerEvents service and call `registerEvents("foo");`
-
 - to broadcast foo event from service or controller inject foo and call it as your broadcast method `foo(bar);`
-
 - somewhere else handle the event with `onFoo(myHandlerFn)`
 - validate event arguments like so 
+
 
 	registerEvents("validEvent", funciton(arg) {
 		// validate arg here, throw error if invalid
