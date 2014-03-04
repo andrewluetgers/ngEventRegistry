@@ -3,7 +3,7 @@ ngEventRegistry
 
 Events as services. Inject an emitter here, a subscriber there, validate input. Event wrangling achievement unlocked!
 
-# TLDR;
+# tl;dr
 
 - add ngEventRegistry.js to your angular app (requires lodash or underscore)
 - add "ngEventRegistry" as a dependency of your app
