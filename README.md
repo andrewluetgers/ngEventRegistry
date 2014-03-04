@@ -85,12 +85,13 @@ provided this function should throw an error if the provided value is unexpected
 	angular.module("myModule", ["eventRegistry"])
 
 		.config(function(registerEvents) {
-
+		
+			// register events realted to this module here in the config
+			
 			function numberOrNull(arg, i) {
 				return typeof arg == "number" ? arg : null
 			}
 
-			// define all app events here
 			registerEvents({
 				myNumberEvent:	numberOrNull, // this can be an array of functions, one for each arg passed in
 				anotherEvent:	registerEvents.passThrough
@@ -98,7 +99,23 @@ provided this function should throw an error if the provided value is unexpected
 
 			// if you only provide names as arguments validation will be pass-through
 			registerEvents("testEvent", "anotherEvent");
+		})
+		.service("myService", function(myNumberEvent) {
+			// now we can emit our number event
+			myNumberEvent(5);
 		});
-
-	// Its best to declare and broadcast events from the same module
-	// lets imagin
+		
+		
+		
+	// now in another module we can listen for and handle the event
+	// first we need to require the parent module so we can inject the handler service
+	
+	angular.module("myOtherModule", ["myModule"])
+	
+		.service("myOtherService", function(onMyNumberEvent) {
+			// here we can handle the numberEvent
+			onMyNumberEvent(function(num) {
+				console.log("Should be a number -> " + num);
+			});
+		});		
+	
