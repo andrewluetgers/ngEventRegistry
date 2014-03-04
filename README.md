@@ -21,7 +21,7 @@ heavily on events one thing will surely lead to another and another,
 perhaps forever. An event gets emitted somewhere (who knows from where)
 gets handled somewhere else (again who knows where that may be)
 and guess what, within that handler something else happens. Yup you
-guessed it whatever that was it lead to another event. This is all fine
+guessed it. Whatever that was, it lead to another event. This is all fine
 and good, until it isn't and before you know it you find you're trapped
 in a [House of the Devil](http://www.imdb.com/title/tt1172994/) soon to be
 part of a satanic ritual that will leave you mentally scarred for life.
