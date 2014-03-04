@@ -77,10 +77,12 @@ to ensure program correctness as needed.
 
 an arg spec looks like this.
 
-	function(argIn, i) {
-	  // validate argIn throw an error if there is a problem
-	  return argOut;
-	}
+ ```javascript
+function(argIn, i) {
+  // validate argIn throw an error if there is a problem
+  return argOut;
+}
+```
 
 as described in http://docs.angularjs.org/api/ng.$rootScope.Scope
 the arguments of the "broadcast" scope method are optional arguments to
