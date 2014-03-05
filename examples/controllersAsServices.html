@@ -17,7 +17,7 @@ See console for event messages
 
 		// to get Angular Batarang to graph the dependencies of a controller
 		// we need to first define it as service then inject it into the controller
-		.factory("myAppCtrlFn", function(onLoading, onMyNumberEvent, myNumberService) {
+		.factory("myAppCtrlFn", function(onLoading, onMyNumberEvent, onMultiArgEvent, myNumberService) {
 			return function myAppCtrlFn() {
 				onLoading(function() {
 					console.log("loading event fired here are the args", arguments);
@@ -25,11 +25,15 @@ See console for event messages
 
 				// here we can handle the numberEvent
 				onMyNumberEvent(function(num) {
-					console.log("Should be a number -> " + num);
+					console.log("onMyNumberEvent - should be a number -> " + num);
+				});
+
+				onMultiArgEvent(function(num, str) {
+					console.log("onMultiArgEvent - should be a number -> " + num, "should be a string -> " + str, arguments);
 				});
 
 				myNumberService(55);
-				myNumberService("foo");
+				myNumberService("foo"); // will lead to a TypeError
 			};
 		})
 
@@ -50,7 +54,8 @@ See console for event messages
 			// register multiple events with validation
 			registerEvents({
 				myNumberEvent:  expectsNumber, // this can be an array of functions, one for each arg passed in
-				anotherEvent:   registerEvents.passThrough
+				anotherEvent:   registerEvents.passThrough,
+				multiArgEvent:	[expectsNumber, expectsString]
 			});
 
 			// the event handler is provided the values returned by the validation functions
@@ -64,8 +69,16 @@ See console for event messages
 				}
 				return arg;
 			}
+
+			function expectsString(arg, i) {
+				console.log("expectsString", arguments, arg, !_.isString(arg), _.isString(arg));
+				if (!_.isString(arg)) {
+					throw new TypeError("Expected string but saw " + arg);
+				}
+				return arg;
+			}
 		})
-		.factory("myNumberService", function(myNumberEvent, loading) {
+		.factory("myNumberService", function(myNumberEvent, loading, multiArgEvent) {
 			return function(num) {
 				// now we can emit our number event
 				setTimeout(function() {
@@ -73,6 +86,10 @@ See console for event messages
 				}, 1000);
 
 				loading("loading", "foo", "bar", num);
+//				multiArgEvent(42, "foo", 55); // should throw Error too many arguments
+				multiArgEvent(42, "foo");
+//				multiArgEvent("foo"); // should throw Error expected number but saw string
+//				multiArgEvent(27); 	// should throw TypeError, expected string but saw undefined
 			};
 		});
 

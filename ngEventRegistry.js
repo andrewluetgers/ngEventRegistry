@@ -4,18 +4,36 @@ angular.module("ngEventRegistry", [], function($provide) {
 
 	function evFn(name, argSpec, $scope, inputArgs) {
 		// the inputArgs are passed through any argSpec function/s
-		var args = _.map(inputArgs, function(arg, i) {
-			if (_.isFunction(argSpec)) {
-				return argSpec(arg, i);
 
+		// drive iteration off of the argspec length if it is an array (enforced arg length)
+		// otherwise off the inputArgs
+		if (!_.isArray(argSpec) && argSpec !== passThrough) {
+			argSpec = [argSpec];
+		}
+
+		var coll = (_.isArray(argSpec)) ? argSpec : inputArgs,
+			args = [];
+
+		for (var i= 0, len = coll.length; i<len; i++ ) {
+			var arg = inputArgs[i];
+			// one validation function to rule them all
+			if (_.isFunction(argSpec)) {
+				args.push(argSpec(arg, i, inputArgs));
+
+			// funciton per argument
 			} else if (_.isArray(argSpec)) {
-				return argSpec[i](arg, i);
+				if (argSpec.length < inputArgs.length) {
+					throw new Error("Too many arguments provided to " + name + ". " +
+						"Expected "+argSpec.length + " but saw " + inputArgs.length);
+				} else {
+					args.push(argSpec[i](arg, i, inputArgs));
+				}
 
 			} else {
-				throw new Error("No Arg-Spec defined for event " + name + ". " +
+				throw new TypeError("No Arg-Spec defined for event " + name + ". " +
 					"Expected a function or array of functions but saw " + typeof argSpec);
 			}
-		});
+		}
 
 		args.unshift(name);
 		return $scope.$broadcast.apply($scope, args);
@@ -111,7 +129,7 @@ angular.module("ngEventRegistry", [], function($provide) {
 		} else if (_.isObject(events)) {
 			_.each(events, registerEvent);
 		} else {
-			throw new Error("Expected event name string/s (implied pass through validation)" +
+			throw new TypeError("Expected event name string/s (implied pass through validation)" +
 				" or an object with keys as eventNames and values as arg spec function/array of functions");
 		}
 	}
