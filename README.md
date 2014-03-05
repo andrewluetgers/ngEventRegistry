@@ -9,7 +9,7 @@ Events as services. Inject an emitter here, a subscriber there, validate input. 
 - add "ngEventRegistry" as a dependency of your app
 - in a config function, inject registerEvents service and call `registerEvents("foo");`
 - to broadcast foo event from service or controller inject foo and call it as your broadcast method `foo(bar);`
-- somewhere else handle the event with `onFoo(myHandlerFn)`
+- somewhere else handle the event by injecting onFoo with `onFoo(myHandlerFn)`
 
 And you can validate event arguments like so:
 
