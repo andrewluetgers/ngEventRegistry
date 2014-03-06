@@ -14,7 +14,7 @@ Events as services. Inject an emitter here, a subscriber there, validate input. 
 And you can validate event arguments like so:
 
  ```javascript
-registerEvents("validEvent", funciton(arg) {
+registerEvents("validEvent", function(arg) {
 	// validate arg here, throw error if invalid
 	return arg;
 });
